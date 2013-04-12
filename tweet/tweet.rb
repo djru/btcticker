@@ -38,7 +38,10 @@ end
 mtGox_data = data()
 
 # To avoid the Twitter gem from throwing an error due to duplicate statuses, the last price data is stored and the new data is checked against it.
-if redis.get("buy") != mtGox_data["buy"] and redis.get("sell") != mtGox_data["sell"]
+if redis.get("buy") == mtGox_data["buy"] and redis.get("sell") == mtGox_data["sell"]
+    puts "Price has not changed."
+    puts mtGox_data
+else
     tweet_price(mtGox_data["buy"], mtGox_data["sell"])
     redis.set("buy", mtGox_data["buy"])
     redis.set("sell", mtGox_data["sell"])
