@@ -14,8 +14,8 @@ end
 #Initializes connection to Redis server
 uri = URI.parse(ENV['REDISTOGO_URL'])
 redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-if !redis.get("buy") then redis.get("buy") = ""
-if !redis.get("sell") then redis.get("sell") = ""
+if !redis.get("buy") then redis.get("buy", "")
+if !redis.get("sell") then redis.set("sell", "")
 
 
 # Fetches buy and sell data from MtGox
