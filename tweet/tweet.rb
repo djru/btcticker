@@ -32,6 +32,7 @@ end
 def tweet_price(buy, sell)
     if buy and sell
         Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
+        puts 'Tweet sent.'
     end
 end
 
@@ -47,5 +48,4 @@ else
     redis.set("sell", mtGox_data["sell"])
     
     puts mtGox_data
-    puts 'Tweet sent.'
 end
