@@ -38,4 +38,7 @@ if redis.get("buy") != mtGox_data["buy"] and redis.get("sell") != mtGox_data["se
     tweet_price(mtGox_data["buy"], mtGox_data["sell"])
     redis.set("buy", mtGox_data["buy"])
     redis.set("sell", mtGox_data["sell"])
+    
+    puts mtGox_data
+    puts 'Tweet sent.'
 end
