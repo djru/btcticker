@@ -30,7 +30,6 @@ end
 
 # Tweets
 def tweet_price(buy, sell)
-    puts buy + ', ' + sell
     if buy and sell
         Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
         puts 'Tweet sent.'

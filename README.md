@@ -1,0 +1,2 @@
+#Bitcoin Ticker
+Bitcoin Ticker is a Heroku app that will periodically run a Ruby script that fetches the current Bitcoin trading prices is USD and tweet them to the (@Bitcoin_Ticker)[http://twitter.com/bitcoin_ticker] account.
