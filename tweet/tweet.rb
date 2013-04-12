@@ -35,6 +35,7 @@ def tweet_price(buy, sell)
         puts 'Tweet sent.'
     else 
         puts "Tweet not sent. See Logs."
+    end
 end
 
 mtGox_data = data()
