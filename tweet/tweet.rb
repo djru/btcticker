@@ -14,6 +14,9 @@ end
 #Initializes connection to Redis server
 uri = URI.parse(ENV['REDISTOGO_URL'])
 redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+if !redis.get("buy") then redis.get("buy") = ""
+if !redis.get("sell") then redis.get("sell") = ""
+
 
 # Fetches buy and sell data from MtGox
 def data
@@ -33,9 +36,6 @@ def tweet_price(buy, sell)
 end
 
 # To avoid the Twitter gem from throwing an error due to duplicate statuses, the last price data is stored and the new data is checked against it.
-mtGox_data = data()
-puts mtGox_data
-puts "Buy: " + redis.get("buy") + " Sell: " + redis.get("sell")
 if redis.get("buy") != mtGox_data["buy"] and redis.get("sell") != mtGox_data["sell"]
     tweet_price(mtGox_data["buy"], mtGox_data["sell"])
     redis.set("buy", mtGox_data["buy"])
