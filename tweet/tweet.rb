@@ -14,7 +14,7 @@ end
 #Initializes connection to Redis server
 uri = URI.parse(ENV['REDISTOGO_URL'])
 redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-if !redis.get("buy") then redis.get("buy", "") end
+if !redis.get("buy") then redis.set("buy", "") end
 if !redis.get("sell") then redis.set("sell", "") end
 
 
