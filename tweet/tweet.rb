@@ -12,6 +12,11 @@ Twitter.configure do |config|
 end
 
 
+#Initializes connection to Redis server
+uri = URI.parse(ENV['REDISTOGO_URL'])
+redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+
+
 # Fetches buy and sell data from MtGox
 def fetch_data
     resp = HTTParty.get("http://data.mtgox.com/api/1/BTCUSD/ticker")
@@ -51,9 +56,7 @@ end
 mtGox_data = fetch_data()
 
 
-#Initializes connection to Redis server
-uri = URI.parse(ENV['REDISTOGO_URL'])
-redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+# Updates if Redis doesn't have data.
 if !redis.get("buy") or !redis.get("sell") then update_price(mtGox_data) end
 
 
