@@ -11,12 +11,6 @@ Twitter.configure do |config|
   config.oauth_token_secret = ENV["OAUTH_SECRET"]
 end
 
-#Initializes connection to Redis server
-uri = URI.parse(ENV['REDISTOGO_URL'])
-redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
-if !redis.get("buy") then redis.set("buy", "") end
-if !redis.get("sell") then redis.set("sell", "") end
-
 
 # Fetches buy and sell data from MtGox
 def fetch_data
@@ -27,12 +21,15 @@ def fetch_data
     return {:buy => buy, :sell => sell}
 end
 
+
 # Stores new price data in Redis.
-def push_price(data)
+def update_price(data)
     redis.set("buy", data[:buy] || "")
     redis.set("sell", data[:sell] || "")
+    
     puts "New prices saved to server."
 end
+
 
 # Tweets.
 def tweet_price(data)
@@ -40,6 +37,7 @@ def tweet_price(data)
     sell = data[:sell]
     if buy and sell
         Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
+        
         puts 'Tweet sent.'
     else 
         puts "Tweet not sent. See Logs."
@@ -49,7 +47,15 @@ end
 
 
 
+# Fetches new data from MtGox.
 mtGox_data = fetch_data()
+
+
+#Initializes connection to Redis server
+uri = URI.parse(ENV['REDISTOGO_URL'])
+redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+if !redis.get("buy") or !redis.get("sell") then update_price(mtGox_data) end
+
 
 # To avoid the Twitter gem from throwing an error due to duplicate statuses, the last price data is stored and the new data is checked against it.
 if redis.get("buy") == mtGox_data["buy"] and redis.get("sell") == mtGox_data["sell"]
@@ -57,7 +63,7 @@ if redis.get("buy") == mtGox_data["buy"] and redis.get("sell") == mtGox_data["se
     puts mtGox_data
 else
     tweet_price(mtGox_data)
-    push_price(mtGox_data)
+    update_price(mtGox_data)
     
     puts mtGox_data
 end
