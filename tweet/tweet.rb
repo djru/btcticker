@@ -19,7 +19,7 @@ if !redis.get("sell") then redis.set("sell", "") end
 
 
 # Fetches buy and sell data from MtGox
-def data
+def fetch_data
     resp = HTTParty.get("http://data.mtgox.com/api/1/BTCUSD/ticker")
     buy = resp["return"]["buy"]["display"]
     sell = resp["return"]["sell"]["display"]
@@ -27,9 +27,17 @@ def data
     return {:buy => buy, :sell => sell}
 end
 
+# Stores new price data in Redis.
+def push_price(data)
+    redis.set("buy", data[:buy] || "")
+    redis.set("sell", data[:sell] || "")
+    puts "New prices saved to server."
+end
 
-# Tweets
-def tweet_price(buy, sell)
+# Tweets.
+def tweet_price(data)
+    buy = data[:buy]
+    sell = data[:sell]
     if buy and sell
         Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
         puts 'Tweet sent.'
@@ -38,16 +46,18 @@ def tweet_price(buy, sell)
     end
 end
 
-mtGox_data = data()
+
+
+
+mtGox_data = fetch_data()
 
 # To avoid the Twitter gem from throwing an error due to duplicate statuses, the last price data is stored and the new data is checked against it.
 if redis.get("buy") == mtGox_data["buy"] and redis.get("sell") == mtGox_data["sell"]
     puts "Price has not changed."
     puts mtGox_data
 else
-    tweet_price(mtGox_data[:buy], mtGox_data[:sell])
-    redis.set("buy", mtGox_data["buy"])
-    redis.set("sell", mtGox_data["sell"])
+    tweet_price(mtGox_data)
+    push_price(mtGox_data)
     
     puts mtGox_data
 end
