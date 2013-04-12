@@ -30,7 +30,7 @@ end
 
 # Tweets
 def tweet_price(buy, sell)
-    if resp and buy and sell
+    if buy and sell
         Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
     end
 end
