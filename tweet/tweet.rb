@@ -33,7 +33,8 @@ def tweet_price(buy, sell)
     if buy and sell
         Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
         puts 'Tweet sent.'
-    end
+    else 
+        puts "Tweet not sent. See Logs."
 end
 
 mtGox_data = data()
