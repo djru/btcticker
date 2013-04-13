@@ -1,6 +1,6 @@
 require 'twitter'
 require 'httparty'
-require 'DB'
+require 'redis'
 
 
 # Initializes connection to Twitter
