@@ -14,7 +14,7 @@ end
 
 #Initializes connection to Redis server
 uri = URI.parse(ENV['REDISTOGO_URL'])
-REDIS = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
+redis = Redis.new(:host => uri.host, :port => uri.port, :password => uri.password)
 
 
 # Fetches buy and sell data from MtGox
@@ -29,8 +29,8 @@ end
 
 # Stores new price data in Redis.
 def update_price(data)
-    REDIS.set("buy", data[:buy] || "")
-    REDIS.set("sell", data[:sell] || "")
+    redis.set("buy", data[:buy] || "")
+    redis.set("sell", data[:sell] || "")
     
     puts "New prices saved to server."
 end
