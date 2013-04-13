@@ -41,7 +41,7 @@ def tweet_price(data)
     buy = data[:buy]
     sell = data[:sell]
     if buy and sell
-        Twitter.update("Buy: #{buy} \n\nSell: #{sell}\n")
+        Twitter.update("Buy: #{buy} \nSell: #{sell}")
         
         puts 'Tweet sent.'
     else 
