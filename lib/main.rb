@@ -30,7 +30,7 @@ end
 # Stores new price data in Redis.
 def update_price(data)
     DB.set("buy", data[:buy] || "")
-    DB.set("sell" data[:sell] || "")
+    DB.set("sell", data[:sell] || "")
     
     puts "New prices saved to server."
 end
