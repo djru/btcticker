@@ -29,8 +29,8 @@ end
 
 # Stores new price data in Redis.
 def update_price(data)
-    DB.["buy"] = data[:buy] || ""
-    DB["sell"] = data[:sell] || ""
+    DB.set("buy", data[:buy] || "")
+    DB.set("sell", data[:sell] || "")
     
     puts "New prices saved to server."
 end
@@ -57,11 +57,11 @@ mtGox_data = fetch_data()
 
 
 # Updates if Redis doesn't have data.
-if !DB["buy"] or !DB["sell"] then update_price(mtGox_data) end
+if !DB.get("buy") or !DB.get("sell") then update_price(mtGox_data) end
 
 
 # To avoid the Twitter gem from throwing an error due to duplicate statuses, the last price data is stored and the new data is checked against it.
-if DB["buy"] == mtGox_data[:buy] and DB["sell"] == mtGox_data[:sell]
+if DB.get("buy") == mtGox_data[:buy] and DB.get("sell") == mtGox_data[:sell]
     puts "Price has not changed."
     puts mtGox_data
 else
