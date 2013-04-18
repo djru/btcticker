@@ -2,7 +2,7 @@ task :default => [:update]
 
 desc 'Fetch data and tweet.'
 task :update do
-    ruby 'lib/tweet.rb'
+    ruby 'lib/main.rb'
 end
 
 desc 'Get database info.'
