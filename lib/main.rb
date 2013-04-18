@@ -3,11 +3,7 @@ require 'httparty'
 require 'redis'
 
 
-require '.\data'
-require '.\tweets'
-
-
-# Initializes connection to Twitter
+# Initializes a connection to Twitter.
 Twitter.configure do |config|
   config.consumer_key = ENV["CONSUMER_KEY"]
   config.consumer_secret = ENV["CONSUMER_SECRET"]
